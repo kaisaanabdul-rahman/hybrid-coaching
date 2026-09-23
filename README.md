@@ -1,2 +1,5 @@
-# hybrid-coaching
-Hybrid Coaching landing page — personalized training with Kaisaan
+# Hybrid Coaching
+
+Live site: https://kaisaanabdul-rahman.github.io/hybrid-coaching/
+
+Personalized training landing page for Kaisaan Abdul.

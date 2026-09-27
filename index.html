@@ -159,6 +159,174 @@
       .coach-photo { height: 420px; }
       section { padding: 64px 0; }
     }
+  
+/* Hybrid Coaching — lead popup (match index.html design tokens) */
+.hc-lead-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 6, 20, 0.72);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+.hc-lead-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.hc-lead-modal {
+  width: min(440px, 100%);
+  background: linear-gradient(180deg, #12162c, #0b0e1c);
+  border: 1px solid rgba(78, 194, 255, 0.22);
+  border-radius: 22px;
+  padding: 28px 24px 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(201, 163, 106, 0.18);
+  position: relative;
+  transform: translateY(12px);
+  transition: transform 0.25s ease;
+}
+.hc-lead-overlay.is-open .hc-lead-modal {
+  transform: translateY(0);
+}
+.hc-lead-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #a7b0d4;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.hc-lead-close:hover {
+  background: rgba(78, 194, 255, 0.16);
+  color: #f3f6ff;
+}
+.hc-lead-kicker {
+  color: #4ec2ff;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.hc-lead-modal h2 {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 28px;
+  line-height: 1.15;
+  font-weight: 400;
+  margin: 0 0 8px;
+  color: #f3f6ff;
+}
+.hc-lead-modal .hc-lead-sub {
+  color: #a7b0d4;
+  font-size: 14px;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+.hc-lead-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.hc-lead-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #a7b0d4;
+  letter-spacing: 0.04em;
+}
+.hc-lead-field input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(78, 194, 255, 0.22);
+  background: rgba(5, 6, 20, 0.65);
+  color: #f3f6ff;
+  font: inherit;
+  font-size: 15px;
+  outline: none;
+}
+.hc-lead-field input:focus {
+  border-color: rgba(201, 163, 106, 0.65);
+  box-shadow: 0 0 0 3px rgba(201, 163, 106, 0.18);
+}
+.hc-lead-field input::placeholder {
+  color: #6e7698;
+}
+.hc-lead-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+  background: #c9a36a;
+  color: #1a1308;
+  border: 0;
+  font-weight: 700;
+  font: inherit;
+  padding: 13px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.hc-lead-submit:hover:not(:disabled) {
+  background: #e2c48a;
+  transform: translateY(-1px);
+}
+.hc-lead-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.hc-lead-fine {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #6e7698;
+  text-align: center;
+}
+.hc-lead-error {
+  display: none;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 80, 80, 0.12);
+  border: 1px solid rgba(255, 80, 80, 0.35);
+  color: #ffb4b4;
+  font-size: 13px;
+}
+.hc-lead-error.is-visible {
+  display: block;
+}
+.hc-lead-success {
+  display: none;
+  text-align: center;
+  padding: 12px 4px 8px;
+}
+.hc-lead-success.is-visible {
+  display: block;
+}
+.hc-lead-success h2 {
+  margin-bottom: 10px;
+}
+.hc-lead-form.is-hidden {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-lead-overlay,
+  .hc-lead-modal {
+    transition: none;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -326,5 +494,173 @@
       <span>Payments processed securely by Stripe.</span>
     </div>
   </footer>
+<!-- Lead popup -->
+<div
+  id="hc-lead-overlay"
+  class="hc-lead-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="hc-lead-title"
+  aria-hidden="true"
+>
+  <div class="hc-lead-modal">
+    <button type="button" class="hc-lead-close" data-hc-lead-close aria-label="Close">&times;</button>
+
+    <div id="hc-lead-success" class="hc-lead-success" aria-live="polite">
+      <p class="hc-lead-kicker">Got it</p>
+      <h2>You’re on the list.</h2>
+      <p class="hc-lead-sub">Kaisaan will follow up. In the meantime, pick a program below when you’re ready.</p>
+    </div>
+
+    <form id="hc-lead-form" class="hc-lead-form" action="https://formsubmit.co/ajax/kaisaanabdul@gmail.com" method="POST">
+      <p class="hc-lead-kicker">Free coaching chat</p>
+      <h2 id="hc-lead-title">Not sure which program fits?</h2>
+      <p class="hc-lead-sub">Drop your details — Kaisaan will reply with a clear recommendation. No spam.</p>
+
+      <p id="hc-lead-error" class="hc-lead-error" role="alert"></p>
+
+      <div class="hc-lead-field">
+        <label for="hc-lead-name">Name</label>
+        <input id="hc-lead-name" name="name" type="text" autocomplete="name" required placeholder="Your name" />
+      </div>
+      <div class="hc-lead-field">
+        <label for="hc-lead-email">Email</label>
+        <input id="hc-lead-email" name="email" type="email" autocomplete="email" required placeholder="you@email.com" />
+      </div>
+      <div class="hc-lead-field">
+        <label for="hc-lead-phone">Phone</label>
+        <input id="hc-lead-phone" name="phone" type="tel" autocomplete="tel" required placeholder="(555) 000-0000" />
+      </div>
+
+      <input type="hidden" name="_subject" value="Hybrid Coaching lead — landing popup" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
+
+      <button type="submit" class="hc-lead-submit" id="hc-lead-submit">Send my info</button>
+      <p class="hc-lead-fine">We only use this to reply about Hybrid Coaching.</p>
+    </form>
+  </div>
+</div>
+<script>
+/**
+ * Hybrid Coaching lead popup — FormSubmit ajax
+ */
+(function () {
+  var FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/kaisaanabdul@gmail.com";
+  var STORAGE_KEY = "hc_lead_popup_v1";
+  var DELAY_MS = 400;
+
+  var overlay = document.getElementById("hc-lead-overlay");
+  if (!overlay) return;
+
+  var form = document.getElementById("hc-lead-form");
+  var success = document.getElementById("hc-lead-success");
+  var errorEl = document.getElementById("hc-lead-error");
+  var submitBtn = document.getElementById("hc-lead-submit");
+  var closeBtns = overlay.querySelectorAll("[data-hc-lead-close]");
+
+  function alreadyDone() {
+    try {
+      return localStorage.getItem(STORAGE_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function markDone() {
+    try {
+      localStorage.setItem(STORAGE_KEY, "1");
+    } catch (e) { /* private mode */ }
+  }
+
+  function openModal() {
+    if (alreadyDone()) return;
+    overlay.classList.add("is-open");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    var first = form && form.querySelector("input:not([tabindex='-1'])");
+    if (first) setTimeout(function () { first.focus(); }, 50);
+  }
+
+  function closeModal() {
+    overlay.classList.remove("is-open");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function dismiss() {
+    markDone();
+    closeModal();
+  }
+
+  closeBtns.forEach(function (btn) {
+    btn.addEventListener("click", dismiss);
+  });
+
+  overlay.addEventListener("click", function (e) {
+    if (e.target === overlay) dismiss();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && overlay.classList.contains("is-open")) dismiss();
+  });
+
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (errorEl) {
+        errorEl.classList.remove("is-visible");
+        errorEl.textContent = "";
+      }
+
+      var data = new FormData(form);
+      data.append("_subject", "Hybrid Coaching lead — landing popup");
+      data.append("_captcha", "false");
+      data.append("_template", "table");
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+      }
+
+      fetch(FORMSUBMIT_ENDPOINT, {
+        method: "POST",
+        body: data,
+        headers: { Accept: "application/json" }
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("submit_failed");
+          return res.json().catch(function () { return {}; });
+        })
+        .then(function () {
+          markDone();
+          if (form) form.classList.add("is-hidden");
+          if (success) success.classList.add("is-visible");
+          setTimeout(closeModal, 2200);
+        })
+        .catch(function () {
+          if (errorEl) {
+            errorEl.textContent = "Something went wrong. Email Kaisaan directly or try again.";
+            errorEl.classList.add("is-visible");
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Send my info";
+          }
+        });
+    });
+  }
+
+  // On-load popup (blocks scroll until dismiss/submit)
+  if (!alreadyDone()) {
+    setTimeout(openModal, DELAY_MS);
+  }
+
+  window.HCLeadPopup = { open: openModal, close: closeModal, dismiss: dismiss };
+})();
+
+</script>
+
 </body>
 </html>
